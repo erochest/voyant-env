@@ -69,7 +69,7 @@ task :cookbooks do
     Rake::Task['vagrant:chef:cookbook'].reenable
   end
   Rake::Task['vagrant:chef:cookbook'].invoke(
-    "https://github.com/erochest/voyant-cookbook",
+    "https://github.com/erochest/voyant",
     "#{cbdir}/voyant"
   )
   Rake::Task['vagrant:chef:cookbook'].reenable
