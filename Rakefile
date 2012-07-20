@@ -57,22 +57,29 @@ task :clobber => ['neatline:clobber'] do
   Rake::Task['vagrant:destroy'].invoke
 end
 
+def clone_cookbook(repo, dest)
+  Rake::Task['vagrant:chef:cookbook'].invoke(repo, dest)
+  Rake::Task['vagrant:chef:cookbook'].reenable
+end
+
 desc 'Downloads the cookbooks.'
 task :cookbooks do
   cbdir = 'cookbooks'
   Dir.mkdir(cbdir) unless File.directory?(cbdir)
   COOKBOOKS.each do |cookbook|
-    Rake::Task['vagrant:chef:cookbook'].invoke(
-      "https://github.com/opscode-cookbooks/#{cookbook}",
+    clone_cookbook(
+      "https://github.com/opscode-cookbooks/#{cookbook}.git",
       "#{cbdir}/#{cookbook}"
     )
-    Rake::Task['vagrant:chef:cookbook'].reenable
   end
-  Rake::Task['vagrant:chef:cookbook'].invoke(
-    "https://github.com/erochest/voyant",
+  clone_cookbook(
+    "git@github.com:scholarslab/cookbooks.git",
+    "slabbooks"
+  )
+  clone_cookbook(
+    "git@github.com:erochest/voyant.git",
     "#{cbdir}/voyant"
   )
-  Rake::Task['vagrant:chef:cookbook'].reenable
 end
 
 require 'zayin/rake/vagrant'
